@@ -465,8 +465,8 @@ $(document).ready(function() {
     // Have to init the projection input box as it is used to format the initial values
     $( "#projection" ).val(currentproj);
 
-    L.mapbox.accessToken = 'pk.eyJ1IjoiY3Vnb3MiLCJhIjoiY2p4Nm43MzA3MDFmZDQwcGxsMjB4Z3hnNiJ9.SQbnMASwdqZe6G4n6OMvVw';
-    map = L.mapbox.map('map').setView([0, 0], 3).addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+    map = L.map('map').setView([0, 0], 3);
+    L.maplibreGL({ style: 'https://tiles.openfreemap.org/styles/liberty' }).addTo(map);
 
     rsidebar = L.control.sidebar('rsidebar', {
         position: 'right',
@@ -499,7 +499,7 @@ $(document).ready(function() {
         iconSize:     [20, 20], // size of the icon
         iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
     });
-    crosshair = new L.marker(map.getCenter(), {icon: crosshairIcon, clickable:false});
+    crosshair = new L.marker(map.getCenter(), {icon: crosshairIcon, interactive: false});
     crosshair.addTo(map);
     
     // Initialize the FeatureGroup to store editable layers
@@ -531,9 +531,8 @@ $(document).ready(function() {
         }
     );
     bounds.on('bounds-set', function( e ) {
-        // move it to the end of the parent
-        var parent = e.target._renderer._container.parentElement;
-        $( parent ).append( e.target._renderer._container ); 
+        // keep bbox rectangle on top of other drawn layers
+        e.target.bringToFront();
         // Set the hash
         var southwest = this.getBounds().getSouthWest();
         var northeast = this.getBounds().getNorthEast();
