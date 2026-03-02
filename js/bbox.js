@@ -466,7 +466,10 @@ $(document).ready(function() {
     $( "#projection" ).val(currentproj);
 
     map = L.map('map').setView([0, 0], 3);
-    L.maplibreGL({ style: 'https://tiles.openfreemap.org/styles/liberty' }).addTo(map);
+    L.maplibreGL({
+        style: 'https://tiles.openfreemap.org/styles/liberty',
+        pixelRatio: window.devicePixelRatio || 1
+    }).addTo(map);
 
     rsidebar = L.control.sidebar('rsidebar', {
         position: 'right',
