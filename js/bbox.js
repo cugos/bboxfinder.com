@@ -513,6 +513,9 @@ $(document).ready(function() {
     drawControl = new L.Control.Draw({
         edit: {
             featureGroup: drawnItems
+        },
+        draw: {
+            circlemarker: false
         }
     });
     map.addControl(drawControl);
