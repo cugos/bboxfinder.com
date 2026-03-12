@@ -9,7 +9,7 @@ var currentmouse = L.latLng(0,0);
 
 /*
 **
-**  override L.Rectangle 
+**  override L.Rectangle
 **  to fire an event after setting
 **
 **  the base parent object L.Path
@@ -48,8 +48,8 @@ var FormatSniffer = (function () {  // execute immediately
             ogrinfoExtent : /Extent\:\s\((.*)\)/ ,
             bbox :  /^\(([\s|\-|0-9]*\.[0-9]*,[\s|\-|0-9]*\.[0-9]*,[\s|\-|0-9]*\.[0-9]*,[\s|\-|0-9]*\.[0-9|\s]*)\)$/
         };
-        this.data = options.data || ""; 
-        this.parse_type = null; 
+        this.data = options.data || "";
+        this.parse_type = null;
     };
 
     /*
@@ -58,7 +58,7 @@ var FormatSniffer = (function () {  // execute immediately
     **
     */
     FormatSniffer.prototype.sniff = function () {
-        return this._sniffFormat(); 
+        return this._sniffFormat();
     };
 
     FormatSniffer.prototype._is_ogrinfo = function() {
@@ -70,7 +70,7 @@ var FormatSniffer = (function () {  // execute immediately
                 var coords = pairs[ indx ].trim().split(",");
                 extent = ( extent.concat(  [ parseFloat(coords[0].trim()), parseFloat(coords[1].trim()) ] ) );
             }
-        } 
+        }
         this.parse_type = "ogrinfo";
         return extent;
     };
@@ -110,7 +110,7 @@ var FormatSniffer = (function () {  // execute immediately
     FormatSniffer.prototype._is_wkt = function() {
         if( this.data === "" ){
             throw new Error( "empty -- nothing to parse" );
-        } 
+        }
 
         try {
             var parsed_data = new Wkt.Wkt( this.data );
@@ -123,7 +123,7 @@ var FormatSniffer = (function () {  // execute immediately
     };
 
     FormatSniffer.prototype._sniffFormat = function () {
-        
+
         var parsed_data = null;
         var fail = false;
         try {
@@ -132,13 +132,13 @@ var FormatSniffer = (function () {  // execute immediately
             // try ogrinfo
             parsed_data = this._is_ogrinfo()
             if ( parsed_data.length > 0 ){
-               next = false; 
+               next = false;
             }
 
-            // try normal bbox 
+            // try normal bbox
             if ( next ) {
                 parsed_data = this._is_normal_bbox();
-                if ( parsed_data.length > 0 ) next = false; 
+                if ( parsed_data.length > 0 ) next = false;
             }
 
             // try GeoJSON
@@ -156,11 +156,11 @@ var FormatSniffer = (function () {  // execute immediately
             // no matches, throw error
             if ( next ) {
                 fail = true;
-/* 
+/*
 **  sorry, this block needs to be left aligned
 **  to make the alert more readable
 **  which means, we probably shouldn't use alerts ;-)
-*/ 
+*/
 throw {
 "name" :  "NoTypeMatchError" ,
 "message" : "The data is not a recognized format:\n \
@@ -170,7 +170,7 @@ throw {
 4. WKT\n\n "
 }
             }
-           
+
 
         } catch(err) {
 
@@ -184,8 +184,8 @@ throw {
 
             this._formatHandler[ this.parse_type ].call( this._formatHandler, parsed_data );
 
-        } 
-        
+        }
+
         return ( fail ? false : true );
     };
 
@@ -196,7 +196,7 @@ throw {
     **  we can do so here as a property name
     **  to enforce reusability
     **
-    **  to add different formats as L.FeatureGroup layer 
+    **  to add different formats as L.FeatureGroup layer
     **  so they work with L.Draw edit and delete options
     **  we fake passing event information
     **  and triggering draw:created for L.Draw
@@ -210,7 +210,7 @@ throw {
                     var event_obj = {
                         layer : lyr,
                         layerType : null,
-                    } 
+                    }
 
                     // coerce to L.Draw types
                     if ( /point/i.test( type_obj ) ){
@@ -222,20 +222,20 @@ throw {
                     else if ( /polygon/i.test( type_obj ) ){
                         event_obj.layerType = "polygon";
                     }
-    
+
                     return event_obj;
 
             } ,
 
 	    reduce_layers : function( lyr ) {
-		    var lyr_parts = []; 
-	     	    if (  typeof lyr[ 'getLayers' ] === 'undefined' ) {  
+		    var lyr_parts = [];
+	     	    if (  typeof lyr[ 'getLayers' ] === 'undefined' ) {
 			return [ lyr ];
-		    } 
+		    }
 		    else {
 			var all_layers = lyr.getLayers();
 			for( var i = 0; i < all_layers.length; i++ ){
-			    lyr_parts = lyr_parts.concat( this.reduce_layers( all_layers[i] ) );	
+			    lyr_parts = lyr_parts.concat( this.reduce_layers( all_layers[i] ) );
 			}
 		    }
 		    return lyr_parts;
@@ -256,7 +256,7 @@ throw {
 
                     var wkt_layer = data.construct[data.type].call( data );
                     var all_layers = this.reduce_layers( wkt_layer );
-                    for( var indx = 0; indx < all_layers.length; indx++ ) { 
+                    for( var indx = 0; indx < all_layers.length; indx++ ) {
                         var lyr = all_layers[indx];
                     	var evt = this.coerce( lyr, data.type );
 
@@ -269,7 +269,7 @@ throw {
             geojson : function( geojson_layer ) {
 
                     var all_layers = this.reduce_layers( geojson_layer );
-                    for( var indx = 0; indx < all_layers.length; indx++ ) { 
+                    for( var indx = 0; indx < all_layers.length; indx++ ) {
                         var lyr = all_layers[indx];
 
                         var geom_type = geojson_layer.getLayers()[0].feature.geometry.type;
@@ -283,7 +283,7 @@ throw {
             ogrinfo : function( data ) {
                     var lBounds = this.get_leaflet_bounds( data );
                     // create a rectangle layer
-                    var lyr = new L.Rectangle( lBounds );    
+                    var lyr = new L.Rectangle( lBounds );
                     var evt = this.coerce( lyr, 'polygon' );
 
                     // call L.Draw.Feature.prototype._fireCreatedEvent
@@ -293,13 +293,13 @@ throw {
             bbox : function( data ) {
                     var lBounds = this.get_leaflet_bounds( data );
                     // create a rectangle layer
-                    var lyr = new L.Rectangle( lBounds );    
+                    var lyr = new L.Rectangle( lBounds );
                     var evt = this.coerce( lyr, 'polygon' );
 
                     // call L.Draw.Feature.prototype._fireCreatedEvent
                     map.fire( 'draw:created', evt );
             }
-        
+
 
     };
 
@@ -352,7 +352,7 @@ function formatBounds(bounds, proj) {
     var xmin = 0;
     var ymin = 0;
     var xmax = 0;
-    var ymax = 0;   
+    var ymax = 0;
     if (proj == '4326') {
         xmin = southwest.lng.toFixed(6);
         ymin = southwest.lat.toFixed(6);
@@ -449,14 +449,14 @@ function validateStringAsBounds(bounds) {
 }
 
 $(document).ready(function() {
-    /* 
+    /*
     **
     **  make sure all textarea inputs
     **  are selected once they are clicked
-    **  because some people might not 
+    **  because some people might not
     **  have flash enabled or installed
     **  and yes...
-    **  there's a fucking Flash movie floating 
+    **  there's a fucking Flash movie floating
     **  on top of your DOM
     **
     */
@@ -465,8 +465,11 @@ $(document).ready(function() {
     // Have to init the projection input box as it is used to format the initial values
     $( "#projection" ).val(currentproj);
 
-    L.mapbox.accessToken = 'pk.eyJ1IjoiY3Vnb3MiLCJhIjoiY2p4Nm43MzA3MDFmZDQwcGxsMjB4Z3hnNiJ9.SQbnMASwdqZe6G4n6OMvVw';
-    map = L.mapbox.map('map').setView([0, 0], 3).addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+    map = L.map('map').setView([0, 0], 3);
+    L.maplibreGL({
+        style: 'https://tiles.openfreemap.org/styles/liberty',
+        pixelRatio: window.devicePixelRatio || 1
+    }).addTo(map);
 
     rsidebar = L.control.sidebar('rsidebar', {
         position: 'right',
@@ -482,15 +485,15 @@ $(document).ready(function() {
             $('#map .leaflet-tile-loaded').removeClass('unblurred');
         },7000);
     });
-    
+
     map.addControl(rsidebar);
 
-    
+
 
     lsidebar = L.control.sidebar('lsidebar', {
         position: 'left'
     });
-    
+
     map.addControl(lsidebar);
 
     // Add in a crosshair for the map
@@ -499,17 +502,20 @@ $(document).ready(function() {
         iconSize:     [20, 20], // size of the icon
         iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
     });
-    crosshair = new L.marker(map.getCenter(), {icon: crosshairIcon, clickable:false});
+    crosshair = new L.marker(map.getCenter(), {icon: crosshairIcon, interactive: false});
     crosshair.addTo(map);
-    
+
     // Initialize the FeatureGroup to store editable layers
     drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
-    
+
     // Initialize the draw control and pass it the FeatureGroup of editable layers
     drawControl = new L.Control.Draw({
         edit: {
             featureGroup: drawnItems
+        },
+        draw: {
+            circlemarker: false
         }
     });
     map.addControl(drawControl);
@@ -531,9 +537,8 @@ $(document).ready(function() {
         }
     );
     bounds.on('bounds-set', function( e ) {
-        // move it to the end of the parent
-        var parent = e.target._renderer._container.parentElement;
-        $( parent ).append( e.target._renderer._container ); 
+        // keep bbox rectangle on top of other drawn layers
+        e.target.bringToFront();
         // Set the hash
         var southwest = this.getBounds().getSouthWest();
         var northeast = this.getBounds().getNorthEast();
@@ -558,7 +563,7 @@ $(document).ready(function() {
             }
         }
     });
-    
+
     map.on('draw:deleted', function (e) {
         e.layers.eachLayer(function (l) {
             drawnItems.removeLayer(l);
@@ -578,14 +583,14 @@ $(document).ready(function() {
             }
         }
     });
-    
+
     map.on('draw:edited', function (e) {
         bounds.setBounds(drawnItems.getBounds())
         $('#boxbounds').text(formatBounds(bounds.getBounds(),'4326'));
         $('#boxboundsmerc').text(formatBounds(bounds.getBounds(),currentproj));
         map.fitBounds(bounds.getBounds());
     });
-    
+
     function display() {
         $('.zoomlevel').text(map.getZoom().toString());
         $('.tilelevel').text(formatTile(new L.LatLng(0, 0),map.getZoom()));
@@ -648,7 +653,7 @@ $(document).ready(function() {
     var boxboundclip = new ZeroClipboard( $("#boxboundsbtn"), {
         moviePath: "/swf/ZeroClipboard.swf"
     });
-    
+
     boxboundclip.on( "load", function(client) {
         client.on( "complete", function(client, args) {
             zeroFeedback( client.htmlBridge );
@@ -658,7 +663,7 @@ $(document).ready(function() {
     var boxboundmercclip = new ZeroClipboard( $("#boxboundsmercbtn"), {
         moviePath: "/swf/ZeroClipboard.swf"
     });
-    
+
     boxboundmercclip.on( "load", function(client) {
         client.on( "complete", function(client, args) {
             zeroFeedback( client.htmlBridge );
@@ -668,7 +673,7 @@ $(document).ready(function() {
     var mapboundclip = new ZeroClipboard( $("#mapboundsbtn"), {
         moviePath: "/swf/ZeroClipboard.swf"
     });
-    
+
     mapboundclip.on( "load", function(client) {
         client.on( "complete", function(client, args) {
             zeroFeedback( client.htmlBridge );
@@ -678,7 +683,7 @@ $(document).ready(function() {
     var mapboundmercclip = new ZeroClipboard( $("#mapboundsmercbtn"), {
         moviePath: "/swf/ZeroClipboard.swf"
     });
-    
+
     mapboundmercclip.on( "load", function(client) {
         client.on( "complete", function(client, args) {
             zeroFeedback( client.htmlBridge );
@@ -688,7 +693,7 @@ $(document).ready(function() {
     var centerclip = new ZeroClipboard( $("#centerbtn"), {
         moviePath: "/swf/ZeroClipboard.swf"
     });
-    
+
     centerclip.on( "load", function(client) {
         client.on( "complete", function(client, args) {
             zeroFeedback( client.htmlBridge );
@@ -698,7 +703,7 @@ $(document).ready(function() {
     var centermercclip = new ZeroClipboard( $("#centermercbtn"), {
         moviePath: "/swf/ZeroClipboard.swf"
     });
-    
+
     centermercclip.on( "load", function(client) {
         client.on( "complete", function(client, args) {
             zeroFeedback( client.htmlBridge );
@@ -730,8 +735,8 @@ $(document).ready(function() {
     $('#info-toggle-button').click(function(){
         $('#wgslabel, #projlabel').fadeToggle(200);
         $('#info').delay(300).slideToggle(200);
-        
-        
+
+
         var buttonText = $('#info-toggle-button').text();
         if (buttonText == 'Hide Coordinates') {
             $('#info-toggle-button').text('Show Coordinates');
@@ -749,8 +754,8 @@ $(document).ready(function() {
             $('#wgslabel, #projlabel').toggleClass('active');
             $('#wgscoords, #projcoords').toggle();
         }
-        
-        
+
+
     });
 
     // handle geolocation click events
@@ -759,7 +764,7 @@ $(document).ready(function() {
         $('#geolocation a').toggleClass('active');
 	$('#geolocation a').toggleClass('active', 350);
     });
-    
+
 
 
     $('button#add').on( 'click', function(evt){
@@ -801,7 +806,7 @@ $(document).ready(function() {
         }).val('3857');
         $('#projection').on( 'click', function(evt){
              $( "#projection" ).autocomplete(  "search", currentproj  );
-        });        
+        });
         // Set labels for output... left always 4326, right is proj selection
         $('#wgslabel').text('EPSG:4326 - ' + proj4defs['4326'][0]);
         $('#projlabel').text('EPSG:3857 - ' + proj4defs['3857'][0]);
@@ -816,11 +821,11 @@ $(document).ready(function() {
             var splitBounds = initialBBox.split(',');
             startBounds = new L.LatLngBounds([splitBounds[0],splitBounds[1]],
                                              [splitBounds[2],splitBounds[3]]);
-            var lyr = new L.Rectangle( startBounds );    
+            var lyr = new L.Rectangle( startBounds );
             var evt = {
                 layer : lyr,
                 layerType : "polygon",
-            } 
+            }
             map.fire( 'draw:created', evt );
             //map.fitBounds(bounds.getBounds());
         } else {
