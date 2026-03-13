@@ -15,7 +15,7 @@ Anyone with admin access to `cugos/bboxfinder.com`. The workflow will fail if tr
 ## How to deploy
 
 1. Make sure the changes you want to deploy have been merged to `main`
-2. Go to **Actions → Deploy to GitHub Pages**
+2. Go to **Actions → Deploy to bboxfinder.com**
 3. Click **Run workflow** → select branch `main` → **Run workflow**
 4. Watch the run complete — a green check means the deploy succeeded
 5. Verify at [bboxfinder.com](https://bboxfinder.com)
@@ -24,7 +24,7 @@ Anyone with admin access to `cugos/bboxfinder.com`. The workflow will fail if tr
 
 Each deployment involves two workflows running in sequence:
 
-1. **Deploy to GitHub Pages** — triggered manually by an admin, pushes `main` → `gh-pages`
+1. **Deploy to bboxfinder.com** — triggered manually by an admin, pushes `main` → `gh-pages`
 2. **pages-build-deployment** — triggered automatically by GitHub Pages, builds and publishes the `gh-pages` branch to the live site
 
 Both must succeed for changes to appear at bboxfinder.com.
