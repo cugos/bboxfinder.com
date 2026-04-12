@@ -471,6 +471,8 @@ $(document).ready(function() {
         pixelRatio: window.devicePixelRatio || 1
     }).addTo(map);
 
+    map.attributionControl.setPosition('topright');
+
     rsidebar = L.control.sidebar('rsidebar', {
         position: 'right',
         closeButton: true
