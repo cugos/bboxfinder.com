@@ -46,7 +46,7 @@ var FormatSniffer = (function () {  // execute immediately
 
         this.regExes = {
             ogrinfoExtent : /Extent\:\s\((.*)\)/ ,
-            bbox :  /^\(([\s|\-|0-9]*\.[0-9]*,[\s|\-|0-9]*\.[0-9]*,[\s|\-|0-9]*\.[0-9]*,[\s|\-|0-9]*\.[0-9|\s]*)\)$/
+            bbox :  /^(?:\(|\[)?([\s\-0-9]*(?:\.[0-9]*)?(?:,[\s\-0-9]*(?:\.[0-9]*)?){3})(?:\)|\])?$/
         };
         this.data = options.data || "";
         this.parse_type = null;
