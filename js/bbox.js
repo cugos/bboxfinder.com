@@ -631,86 +631,36 @@ $(document).ready(function() {
 
     var zeroFeedback = function( target ){
 
-        $(target).append( "<span id='zfeedback'>&nbsp;Copied!&nbsp;</span>" );
+        var offset = $(target).offset();
 
-        $('#zfeedback').css({
+        var $badge = $( "<span id='zfeedback'>&nbsp;Copied!&nbsp;</span>" ).css({
+             "position" : "absolute" ,
+             "top" : offset.top ,
+             "left" : offset.left + $(target).outerWidth() + 5 ,
              "background-color" : "#C7C700" ,
              "font-stye" : "bold" ,
              "border-radius" : "15px" ,
              "padding" : "5px" ,
-             "box-shadow" : "0px 2px 20px #000"
-        });
-
-        $(target)
-            .animate( { opacity : 0 , top : "-=100" }, 500 );
+             "box-shadow" : "0px 2px 20px #000" ,
+             "z-index" : 10001
+        }).appendTo( "body" );
 
         setTimeout( function(){
-            $(target).css( "opacity", 1.0 );
-            $(target).css( "background-color", "" );
-            $('#zfeedback').remove();
+            $badge.fadeOut( 300, function(){ $badge.remove(); } );
         }, 700 );
 
     }
 
-    var boxboundclip = new ZeroClipboard( $("#boxboundsbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    boxboundclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
+    $("#boxboundsbtn, #boxboundsmercbtn, #mapboundsbtn, #mapboundsmercbtn, #centerbtn, #centermercbtn")
+        .click(function(){
+            if( !navigator.clipboard ) return;
+            var btn = this;
+            var targetEl = document.getElementById( $(this).data("clipboard-target") );
+            if( !targetEl ) return;
+            navigator.clipboard.writeText( targetEl.textContent ).then(function(){
+                zeroFeedback( btn );
+            }).catch(function(){});
         });
-    });
-
-    var boxboundmercclip = new ZeroClipboard( $("#boxboundsmercbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    boxboundmercclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var mapboundclip = new ZeroClipboard( $("#mapboundsbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    mapboundclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var mapboundmercclip = new ZeroClipboard( $("#mapboundsmercbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    mapboundmercclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var centerclip = new ZeroClipboard( $("#centerbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    centerclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var centermercclip = new ZeroClipboard( $("#centermercbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    centermercclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
 
     // handle create-geojson click events
     $('#create-geojson').click(function(){
