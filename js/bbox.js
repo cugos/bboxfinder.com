@@ -629,11 +629,11 @@ $(document).ready(function() {
         $('#mapboundsmerc').text(formatBounds(map.getBounds(),currentproj));
     });
 
-    var zeroFeedback = function( target ){
+    var showCopiedBadge = function( target ){
 
         var offset = $(target).offset();
 
-        var $badge = $( "<span id='zfeedback'>&nbsp;Copied!&nbsp;</span>" ).css({
+        var $badge = $( "<span id='copied-badge'>&nbsp;Copied!&nbsp;</span>" ).css({
              "position" : "absolute" ,
              "top" : offset.top ,
              "left" : offset.left + $(target).outerWidth() + 5 ,
@@ -658,7 +658,7 @@ $(document).ready(function() {
             var targetEl = document.getElementById( $(this).data("clipboard-target") );
             if( !targetEl ) return;
             navigator.clipboard.writeText( targetEl.textContent ).then(function(){
-                zeroFeedback( btn );
+                showCopiedBadge( btn );
             }).catch(function(){});
         });
 
