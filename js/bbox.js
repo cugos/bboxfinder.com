@@ -344,7 +344,7 @@ function addLayer(layer, name, title, zIndex, on) {
 
 function formatBounds(bounds, proj) {
     var gdal = $("input[name='gdal-checkbox']").prop('checked');
-    var lngLat = $("input[name='coord-order']").prop('checked');
+    var lngLat = $("input[name='coord-order']:checked").val() === 'lng-lat';
 
     var formattedBounds = '';
     var southwest = bounds.getSouthWest();
@@ -400,7 +400,7 @@ function formatTile(point,zoom) {
 
 function formatPoint(point, proj) {
     var gdal = $("input[name='gdal-checkbox']").prop('checked');
-    var lngLat = $("input[name='coord-order']").prop('checked');
+    var lngLat = $("input[name='coord-order']:checked").val() === 'lng-lat';
 
     var formattedPoint = '';
     if (proj == '4326') {
@@ -422,18 +422,18 @@ function formatPoint(point, proj) {
     }
     if (gdal) {
         if (lngLat) {
-            formattedBounds = x+','+y;
+            formattedPoint = x+','+y;
         } else {
-            formattedBounds = y+','+x;
+            formattedPoint = y+','+x;
         }
     } else {
         if (lngLat) {
-            formattedBounds = x+' '+y;
+            formattedPoint = x+' '+y;
         } else {
-            formattedBounds = y+' '+x;
+            formattedPoint = y+' '+x;
         }
     }
-    return formattedBounds
+    return formattedPoint;
 }
 
 function validateStringAsBounds(bounds) {
@@ -630,86 +630,62 @@ $(document).ready(function() {
     });
 
     var zeroFeedback = function( target ){
+        var $target = $(target);
+        $('#zfeedback').remove();
+        var $feedback = $( "<span id='zfeedback'>&nbsp;Copied!&nbsp;</span>" );
+        $target.after( $feedback );
 
-        $(target).append( "<span id='zfeedback'>&nbsp;Copied!&nbsp;</span>" );
-
-        $('#zfeedback').css({
+        $feedback.css({
              "background-color" : "#C7C700" ,
-             "font-stye" : "bold" ,
+             "font-weight" : "bold" ,
              "border-radius" : "15px" ,
-             "padding" : "5px" ,
-             "box-shadow" : "0px 2px 20px #000"
+             "padding" : "2px 6px" ,
+             "margin-left" : "5px",
+             "display" : "inline-block",
+             "box-shadow" : "0px 2px 10px #000"
         });
 
-        $(target)
-            .animate( { opacity : 0 , top : "-=100" }, 500 );
+        $feedback.animate( { opacity : 0 }, 1000, function(){
+            $feedback.remove();
+        });
+    };
 
-        setTimeout( function(){
-            $(target).css( "opacity", 1.0 );
-            $(target).css( "background-color", "" );
-            $('#zfeedback').remove();
-        }, 700 );
-
+    function copyToClipboard(text, targetElement) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(function() {
+                zeroFeedback(targetElement);
+            }).catch(function() {
+                fallbackCopyText(text, targetElement);
+            });
+        } else {
+            fallbackCopyText(text, targetElement);
+        }
     }
 
-    var boxboundclip = new ZeroClipboard( $("#boxboundsbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
+    function fallbackCopyText(text, targetElement) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            zeroFeedback(targetElement);
+        } catch (err) {
+            console.error('Fallback copy failed', err);
+        }
+        document.body.removeChild(textArea);
+    }
 
-    boxboundclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var boxboundmercclip = new ZeroClipboard( $("#boxboundsmercbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    boxboundmercclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var mapboundclip = new ZeroClipboard( $("#mapboundsbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    mapboundclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var mapboundmercclip = new ZeroClipboard( $("#mapboundsmercbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    mapboundmercclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var centerclip = new ZeroClipboard( $("#centerbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    centerclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
-    });
-
-    var centermercclip = new ZeroClipboard( $("#centermercbtn"), {
-        moviePath: "/swf/ZeroClipboard.swf"
-    });
-
-    centermercclip.on( "load", function(client) {
-        client.on( "complete", function(client, args) {
-            zeroFeedback( client.htmlBridge );
-        });
+    $('#info img[data-clipboard-target]').css('cursor', 'pointer').click(function() {
+        var targetId = $(this).attr('data-clipboard-target');
+        var text = $('#' + targetId).text();
+        if (text) {
+            copyToClipboard(text, this);
+        }
     });
 
     // handle create-geojson click events

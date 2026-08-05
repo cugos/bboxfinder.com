@@ -56,6 +56,18 @@
         </div>
         <div id="info">
             <div id="wgscoords" class="coords">
+                <div id="bbounds">
+                    <span id="bbboundslabel" class="bboxlabel">Box</span>
+                    <img id="boxboundsbtn" data-clipboard-target="boxbounds" src="images/copy.png" title="Copy Box Coordinates"><span id="boxbounds" class="bboxllpos"></span>
+                </div>
+                <div id="mbounds">
+                    <span id="mboundslabel" class="bboxlabel">Map</span>
+                    <img id="mapboundsbtn" data-clipboard-target="mapbounds" src="images/copy.png" title="Copy Map Coordinates"><span id="mapbounds" class="bboxllpos"></span>
+                </div>
+                <div id="mcenter">
+                    <span id="mcenterlabel" class="bboxlabel">Center</span>
+                    <img id="centerbtn" data-clipboard-target="center" src="images/copy.png" title="Copy Center Coordinates"><span id="center" class="bboxllpossmall"></span>
+                </div>
                 <div id="mouse">
                     <span id="mouselabel" class="bboxlabel">Mouse</span>
                     <span id="mousepos" class="bboxllpossmall"></span>
@@ -68,20 +80,20 @@
                     <span id="bboxlabel" class="bboxlabel">Zoom</span>
                     <span class="zoomlevel zoomsmall"></span>
                 </div>
+            </div>
+            <div id="projcoords" class="coords">
                 <div id="bbounds">
                     <span id="bbboundslabel" class="bboxlabel">Box</span>
-                    <img id="boxboundsbtn" data-clipboard-target="boxbounds" src="/images/copy.png"><span id="boxbounds" class="bboxllpos"></span>
+                    <img id="boxboundsmercbtn" data-clipboard-target="boxboundsmerc" src="images/copy.png" title="Copy Box Coordinates"><span id="boxboundsmerc" class="bboxprojpos"></span>
                 </div>
                 <div id="mbounds">
                     <span id="mboundslabel" class="bboxlabel">Map</span>
-                    <img id="mapboundsbtn" data-clipboard-target="mapbounds" src="/images/copy.png"><span id="mapbounds" class="bboxllpos"></span>
+                    <img id="mapboundsmercbtn" data-clipboard-target="mapboundsmerc" src="images/copy.png" title="Copy Map Coordinates"><span id="mapboundsmerc" class="bboxprojpos"></span>
                 </div>
                 <div id="mcenter">
                     <span id="mcenterlabel" class="bboxlabel">Center</span>
-                    <img id="centerbtn" data-clipboard-target="center" src="/images/copy.png"><span id="center" class="bboxllpossmall"></span>
+                    <img id="centermercbtn" data-clipboard-target="centermerc" src="images/copy.png" title="Copy Center Coordinates"><span id="centermerc" class="bboxprojpossmall"></span>
                 </div>
-            </div>
-            <div id="projcoords" class="coords">
                 <div id="mouse">
                     <span id="mouselabel" class="bboxlabel">Mouse</span>
                     <span id="mouseposmerc" class="bboxprojpossmall"></span>
@@ -93,18 +105,6 @@
                 <div id="zoom">
                     <span id="bboxlabel" class="bboxlabel">Zoom</span>
                     <span class="zoomlevel zoomsmall"></span>
-                </div>
-                <div id="bbounds">
-                    <span id="bbboundslabel" class="bboxlabel">Box</span>
-                    <img id="boxboundsmercbtn" data-clipboard-target="boxboundsmerc" src="/images/copy.png"><span id="boxboundsmerc" class="bboxprojpos"></span>
-                </div>
-                <div id="mbounds">
-                    <span id="mboundslabel" class="bboxlabel">Map</span>
-                    <img id="mapboundsmercbtn" data-clipboard-target="mapboundsmerc" src="/images/copy.png"><span id="mapboundsmerc" class="bboxprojpos"></span>
-                </div>
-                <div id="mcenter">
-                    <span id="mcenterlabel" class="bboxlabel">Center</span>
-                    <img id="centermercbtn" data-clipboard-target="centermerc" src="/images/copy.png"><span id="centermerc" class="bboxprojpossmall"></span>
                 </div>
             </div>
             <div id="coord-format">
